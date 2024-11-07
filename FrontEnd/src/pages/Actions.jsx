@@ -1,22 +1,43 @@
-import { Component } from "react";
+import { Link, useParams } from 'react-router-dom';
 import '../style/UserPage.css'
+import modificar from '/update.png'
+import eliminar from '/delete.png'
 
-class Actions extends Component {
-    constructor(props) {
-        super(props);
-    }
-    state = {  }
-    render() { 
-        return ( 
-            <>
-                <div className="bottoms">
-                    <div className="bot bot1"><a href="#" title="Crear"><img src="/create.png" width="25" height="25"/></a></div>
-                    <div className="bot bot2"><a href="#" title="Modificar"><img src="/update.png" width="25" height="25"/></a></div>
-                    <div className="bot bot1"><a href="#" title="Eliminar"><img src="/delete.png" width="25" height="25"/></a></div>
-                </div>
-            </>
-         );
-    }
+
+
+export default function Actions({ alumno_id }) {
+
+    return (
+        <>
+            <div className="bottoms">
+
+                <Link to={`/acceder/alumno/edit/${alumno_id}`} className='bot bot2'>
+                    <img src={modificar} alt="Modificar" width="25" height="25" />
+                    <span className="material-symbols-outlined"></span>
+                </Link>
+
+                <Link to={`/alumno/delete/${alumno_id}`} className='bot bot2'>
+                    <img src={eliminar} alt="Modificar" width="25" height="25" />
+                    <span className="material-symbols-outlined"></span>
+                </Link>
+            </div>
+        </>
+    );
+
 }
- 
-export default Actions;
+
+
+export function AlumnoEdit() {
+
+    const { alumno_id } = useParams();
+
+    return (
+        <>
+            <h1>Fromulario para editar el alumno con ID: {alumno_id}</h1>
+        </>
+    );
+
+
+
+}
+
