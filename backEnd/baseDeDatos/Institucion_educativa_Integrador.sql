@@ -6,7 +6,9 @@ CREATE TABLE institucion (
     id_institucion INT(11) PRIMARY KEY NOT NULL,
     nombre VARCHAR(50) NOT NULL,       -- Ampliado tamaño
     telefono VARCHAR(30) NOT NULL,
-    domicilio VARCHAR(100) NOT NULL    -- Ampliado tamaño
+    domicilio VARCHAR(100) NOT NULL,    -- Ampliado tamaño
+    fk_usuario INT(11) NOT NULL,
+    FOREIGN KEY fk_usuario REFERENCES usuario(id_usuario)
 );
 
 CREATE TABLE usuario (

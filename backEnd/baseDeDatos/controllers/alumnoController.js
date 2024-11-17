@@ -1,8 +1,10 @@
 // alumnoController.js
-
 const express = require('express');
-const router = express.Router(); // Usamos router en lugar de app
-const alumnoBD = require("../models/alumnoModel.js");
+const router = express.Router();
+const model = require('../model/usuario.js');
+//const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { rulesUser, validate } = require('../middleware/validations.js');
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) disponibles para ALUMNO --- 
@@ -12,7 +14,7 @@ router.get("/", listarTodo);
 router.get("/:curso", getByCurso);
 router.post('/create', crear);
 router.get('/:dni', obtenerAlumno);
-router.delete("/:id_alumno", eliminarAlumno);
+router.delete("/:dni", eliminarAlumno);
 router.put("/:dni", modificarAlumno);
 
 // --------------------------------------------------------
