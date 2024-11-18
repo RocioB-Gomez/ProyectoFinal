@@ -13,7 +13,7 @@ const rulesUser = () => [
 ]
 
 
-const AlumnoRules = () => [
+const alumnoRules = () => [
     // Validación para DNI (ej. Argentina: 8 dígitos, sin puntos ni guiones)
     check('dni')
         .isInt({ min: 1000000, max: 99999999 })
@@ -33,21 +33,25 @@ const AlumnoRules = () => [
         .isLength({ min: 2, max: 50 })
         .withMessage('El apellido debe tener entre 2 y 50 caracteres'),
 
-    // Validación para teléfono (formato de número telefónico internacional o local)
-    check('telefono')
-        .matches(/^[+]?[0-9\s-]{7,15}$/)
-        .withMessage('El teléfono debe ser un número válido con entre 7 y 15 dígitos'),
+    check('anio_ingreso')
+        .isISO8601().withMessage('La fecha debe estar en formato YYYY-MM-DD')
+        .isBefore(new Date().toISOString()).withMessage('La fecha no puede estar en el futuro')
+        .custom((value) => {
+          const fechaMinima = new Date('2000-01-01');
+          if (new Date(value) < fechaMinima) {
+            throw new Error('La fecha no puede ser anterior al 1 de enero de 2000');
+          }
+          return true;
+        }),
 
-    // Validación para dirección (mínimo 5 caracteres, letras y números)
-    check('direccion')
-        .isLength({ min: 5, max: 100 })
-        .withMessage('La dirección debe tener entre 5 y 100 caracteres')
-        .matches(/^[a-zA-Z0-9\s,.-áéíóúÁÉÍÓÚñÑ]+$/)
-        .withMessage('La dirección solo puede contener letras, números y los caracteres: , . -')
+    check('curso')
+        .matches(/^[A-Z][1-9]$/).withMessage('El curso debe ser una letra mayúscula seguida de un número del 1 al 9')
+
 ];
 
-
-
+   
+  
+  
 
 // y el atrapador de errores por otro lado
 const validate = (req, res, next) => {
@@ -58,4 +62,4 @@ const validate = (req, res, next) => {
     next();
 }
 
-module.exports = { validate, rulesUser, personaRules };
+module.exports = { validate, rulesUser, alumnoRules };
