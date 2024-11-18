@@ -9,18 +9,43 @@ const { rulesUser, validate } = require('../middleware/validations.js');
 // -- Rutas de escucha (endpoint) disponibles para USUARIO --
 // ----------------------------------------------------------
 
+router.post('/login', login);
 router.post('/', rulesUser(), validate, crear_usuario);
 router.get('/', listar_usuarios);
 router.get('/rol', listar_rol);
 router.get('/:usuario_id', buscarPorID);
 router.put('/:usuario_id', actualizar_usuario);
 router.delete('/:usuario_id', eliminar_usuario);
-router.post('/login', login);
-
 
 // -------------------------------------------------------------- 
 // -- funciones utilizadas por el router  ----------------------- 
 // --------------------------------------------------------------
+
+async function login(req, res) {
+    try {
+        const { mail, contraseña } = req.body;
+        const [result] = await model.buscarPorMail(mail);
+        const iguales = bcrypt.compareSync(contraseña, result.contraseña);
+        if (iguales) {
+            let user = {
+                nombre: result.nombre,
+                apellido: result.apellido,
+                mail: result.mail
+            }
+            jwt.sign(user, 'secretPass', { expiresIn: '10000s' }, (err, token) => {
+                if (err) {
+                    res.status(500).send({ message: err });
+                } else {
+                    res.status(200).json({ datos: user, token: token });
+                }
+            })
+        } else {
+            res.status(403).send({ message: 'Contraseña Incorrecta' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+}
 
 async function crear_usuario(req, res) {
     const { mail, pass, persona_id } = req.body;
@@ -84,31 +109,6 @@ async function eliminar_usuario(req, res) {
     }
 }
 
-async function login(req, res) {
-    try {
-        const { mail, contraseña } = req.body;
-        const [result] = await model.buscarPorMail(mail);
-        const iguales = bcrypt.compareSync(contraseña, result.contraseña);
-        if (iguales) {
-            let user = {
-                nombre: result.nombre,
-                apellido: result.apellido,
-                mail: result.mail
-            }
-            jwt.sign(user, 'secretPass', { expiresIn: '10000s' }, (err, token) => {
-                if (err) {
-                    res.status(500).send({ message: err });
-                } else {
-                    res.status(200).json({ datos: user, token: token });
-                }
-            })
-        } else {
-            res.status(403).send({ message: 'Contraseña Incorrecta' });
-        }
-    } catch (error) {
-        res.status(500).send({ message: error.message });
-    }
-}
 
 
 module.exports = router;
