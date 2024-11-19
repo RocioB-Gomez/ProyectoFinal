@@ -34,16 +34,8 @@ const alumnoRules = () => [
         .withMessage('El apellido debe tener entre 2 y 50 caracteres'),
 
     check('anio_ingreso')
-        .isISO8601().withMessage('La fecha debe estar en formato YYYY-MM-DD')
-        .isBefore(new Date().toISOString()).withMessage('La fecha no puede estar en el futuro')
-        .custom((value) => {
-          const fechaMinima = new Date('2000-01-01');
-          if (new Date(value) < fechaMinima) {
-            throw new Error('La fecha no puede ser anterior al 1 de enero de 2000');
-          }
-          return true;
-        }),
-
+        .isInt().withMessage('El año de ingreso debe ser un entero'),
+       
     check('curso')
         .matches(/^[A-Z][1-9]$/).withMessage('El curso debe ser una letra mayúscula seguida de un número del 1 al 9')
 
