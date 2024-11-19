@@ -2,14 +2,14 @@
 
 const express = require('express');
 const router = express.Router();
-const model = require('../models/alumnoModel.js').default;
+const model = require('../models/alumnoModel.js');
 
 const { alumnoRules, validate } = require('../middleware/validations.js');
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) disponibles para ALUMNO --- 
 // --------------------------------------------------------
 
-router.post('/', alumnoRules(), validate, crearAlumno);
+router.post('/crear', alumnoRules(), validate, crearAlumno);
 router.get("/", listarTodo);
 router.get("/:curso", obtenerPorCurso);
 router.get('/:dni', obtenerAlumno);
@@ -22,13 +22,13 @@ router.delete("/:dni", eliminarAlumno);
 // --------------------------------------------------------
 
 async function crearAlumno(req, res) {
-    const { dni, anio_ingreso, nombre, apellido, curso } = req.body;
+    const { dni, anio_ingreso, nombre, apellido, curso, fk_tutor } = req.body;
     try {
-        await model.crearAlumno(dni, anio_ingreso, nombre, apellido, curso);
-        res.status(201).json({ message: 'Alumno creado correctamente' });
+        const result = await model.crearAlumno(dni, anio_ingreso, nombre, apellido, curso, fk_tutor);
+        res.status(201).json({ message: 'Alumno creado correctamente' ,alumno: result });
     } catch (err) {
         res.status(500).json({ error: err.message });
-    }
+    }   
 }
 
 async function listarTodo(req, res) {

@@ -13,7 +13,7 @@ CREATE TABLE institucion (
 
 CREATE TABLE usuario (
     id_usuario INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    mail VARCHAR(50) NOT NULL,         
+    mail VARCHAR(50) NOT NULL UNIQUE,         
     contraseña VARCHAR(50) NOT NULL,   
     nombre VARCHAR(50) NOT NULL,       
     apellido VARCHAR(50) NOT NULL,     
@@ -59,12 +59,11 @@ CREATE TABLE tutor (
 
 CREATE TABLE alumno (
     id_alumno INT(11) PRIMARY KEY AUTO_INCREMENT,
-    dni INT(11) NOT NULL,
     anio_ingreso INT(4) NOT NULL,
     nombre VARCHAR(50) NOT NULL,       
     apellido VARCHAR(50) NOT NULL,     
-    curso VARCHAR(11) NOT NULL,        
-    fk_usuario INT(11) NOT NULL,
+    curso VARCHAR(11) NOT NULL,
+    dni INT(11) NOT NULL,        
     fk_tutor INT(11) NOT NULL,
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (fk_tutor) REFERENCES tutor(id_tutor)

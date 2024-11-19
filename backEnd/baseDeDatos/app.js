@@ -12,11 +12,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms"));
 
 // Cargar configuración desde el archivo config.json
-const configuracion = require("./config.json");
+const configuracion = require("./config/config.json");
 
 // Importar controlador de alumnos
 const alumnoController = require("./controllers/alumnoController.js");
 app.use("/api/alumno", alumnoController);  // Usar el router de alumnoController
+
+// Importar controlador de usuario
+const usuarioController = require("./controllers/usuarioController.js");
+app.use("/api/usuario", usuarioController);  // Usar el router de alumnoController
+
 
 // Página de inicio
 app.get("/", (req, res) => {
