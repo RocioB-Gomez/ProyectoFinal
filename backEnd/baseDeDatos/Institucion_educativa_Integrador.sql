@@ -58,7 +58,8 @@ CREATE TABLE alumno (
     curso VARCHAR(2) NOT NULL,
     dni INT(11) NOT NULL,        
     fk_tutor INT(11) NOT NULL,
-    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario),
+    nombre varchar(30) NOT NULL,
+    apellido varchar(30) NOT NULL,
     FOREIGN KEY (fk_tutor) REFERENCES tutor(id_tutor)
 );
 
