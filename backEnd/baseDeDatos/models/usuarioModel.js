@@ -83,26 +83,7 @@ const Usuario = {
         }
     },
     
-
-    // buscarPorMail: async (mail) => {
-    //     try {
-    //         // Realiza el query y verifica el formato del resultado
-    //         const consulta = await db.execute(`SELECT CONCAT(u.nombre, ' ', u.apellido, ',', u.rol) AS DATOS_USUARIO 
-    //                                             FROM USUARIO U 
-    //                                             WHERE mail = ?`);
-    //         console.log('Resultado del query:', consulta);
-
-    //         const [result] = await db.execute(consulta, [mail]);
-    //         if (result.length == 0) {
-    //             throw new Error(`Usuario no encontrado con el mail : ${mail}`);
-    //         }
-    //         return result; //si no saltó el error en el if anterior entoces se devuelve el resultado
-    //     } catch (error) {
-    //         throw new Error(error.message);
-    //     }
-    // },
-
-            
+     
     //ACTUALIZAR USUARIO
 
     actualizar_usuario: async (id, contraseña, mail, nombre, apellido) => {
