@@ -6,10 +6,10 @@ const db = require('../config/config_database');
 const Alumno = {
 
     crearAlumno: async (dni, anio_ingreso, nombre, apellido, curso, fk_tutor) => {
-        const query = 'INSERT INTO alumno (apellido, anio_ingreso, nombre, dni, curso, fk_tutor) VALUES (?, ?, ?, ? ,?,?)';
+        const query = 'INSERT INTO alumno (dni, anio_ingreso, nombre, apellido, curso, fk_tutor) VALUES (?, ?, ?, ? ,? ,?)';
         const insertado = 'SELECT * FROM alumno WHERE id_alumno = LAST_INSERT_ID()';
         try {
-            await db.execute(query, [apellido, anio_ingreso, nombre, dni, curso, fk_tutor]);
+            await db.execute(query, [dni, anio_ingreso, nombre, apellido, curso, fk_tutor]);
             const [rows] = await db.execute(insertado);
             return rows[0];
         } catch (error) {

@@ -54,12 +54,12 @@ CREATE TABLE tutor (
 
 CREATE TABLE alumno (
     id_alumno INT(11) PRIMARY KEY AUTO_INCREMENT,
+    dni INT(11) NOT NULL,
     anio_ingreso INT(4) NOT NULL,
-    curso VARCHAR(2) NOT NULL,
-    dni INT(11) NOT NULL,        
-    fk_tutor INT(11) NOT NULL,
     nombre varchar(30) NOT NULL,
     apellido varchar(30) NOT NULL,
+    curso VARCHAR(2) NOT NULL,     
+    fk_tutor INT(11) NOT NULL,
     FOREIGN KEY (fk_tutor) REFERENCES tutor(id_tutor)
 );
 
