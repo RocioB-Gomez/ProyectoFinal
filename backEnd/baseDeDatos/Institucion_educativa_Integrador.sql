@@ -4,17 +4,16 @@ USE integrador;
 
 CREATE TABLE institucion (
     id_institucion INT(11) PRIMARY KEY NOT NULL,
-    nombre VARCHAR(50) NOT NULL,       
     telefono VARCHAR(30) NOT NULL,
     domicilio VARCHAR(100) NOT NULL,    
     fk_usuario INT(11) NOT NULL,
-    FOREIGN KEY fk_usuario REFERENCES usuario(id_usuario)
+    FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
 );
 
 CREATE TABLE usuario (
     id_usuario INT(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
     mail VARCHAR(50) NOT NULL UNIQUE,         
-    contraseña VARCHAR(50) NOT NULL,   
+    contraseña VARCHAR(250) NOT NULL,   
     nombre VARCHAR(50) NOT NULL,       
     apellido VARCHAR(50) NOT NULL,     
     rol ENUM('Tutor', 'Docente', 'Institucion') NOT NULL
@@ -29,8 +28,6 @@ CREATE TABLE area_curricular (
 
 CREATE TABLE docente (
     id_docente INT(11) PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(50) NOT NULL,       
-    apellido VARCHAR(50) NOT NULL,     
     especialidad VARCHAR(50) NOT NULL, 
     fk_usuario INT(11) NOT NULL,
     fk_institucion INT(11) NOT NULL, 
@@ -49,9 +46,7 @@ CREATE TABLE asignatura (
 
 CREATE TABLE tutor (
     id_tutor INT(11) PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(50) NOT NULL,       
-    apellido VARCHAR(50) NOT NULL,     
-    direccion VARCHAR(100) NOT NULL,   
+    direccion VARCHAR(50) NOT NULL,   
     telefono VARCHAR(30) NOT NULL,
     fk_usuario INT(11) NOT NULL,
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
@@ -60,9 +55,7 @@ CREATE TABLE tutor (
 CREATE TABLE alumno (
     id_alumno INT(11) PRIMARY KEY AUTO_INCREMENT,
     anio_ingreso INT(4) NOT NULL,
-    nombre VARCHAR(50) NOT NULL,       
-    apellido VARCHAR(50) NOT NULL,     
-    curso VARCHAR(11) NOT NULL,
+    curso VARCHAR(2) NOT NULL,
     dni INT(11) NOT NULL,        
     fk_tutor INT(11) NOT NULL,
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario),
@@ -73,7 +66,7 @@ CREATE TABLE calificacion (
     id_calificacion INT(11) PRIMARY KEY AUTO_INCREMENT,
     fk_alumno INT(11) NOT NULL,
     fk_asignatura INT(11) NOT NULL,
-    nota DECIMAL(2, 2) NOT NULL,       -- Cambio para tener dos decimales (ej. 7.50)
+    nota DECIMAL(4, 2) NOT NULL,       -- Cambio para tener dos decimales, cuatro digitos en total, dos enteros dos decimales (ej. 7.50)
     FOREIGN KEY (fk_alumno) REFERENCES alumno(id_alumno),
     FOREIGN KEY (fk_asignatura) REFERENCES asignatura(id_asignatura)
 );
