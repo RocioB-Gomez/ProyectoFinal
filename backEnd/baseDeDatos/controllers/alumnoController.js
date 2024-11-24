@@ -24,7 +24,7 @@ router.delete("/:dni", eliminarAlumno);
 async function crearAlumno(req, res) {
     const { dni, anio_ingreso,nombre, apellido, curso, fk_tutor } = req.body;
     try {
-        const result = await model.crearAlumno(dni, anio_ingreso, nombre, apellido, curso, fk_tutor, );
+        const result = await model.crearAlumno(dni, anio_ingreso, nombre, apellido, curso, fk_tutor );
         res.status(201).json({ message: 'Alumno creado correctamente' ,alumno: result });
     } catch (err) {
         res.status(500).json({ error: err.message });
