@@ -21,16 +21,18 @@ router.delete('/:usuario_id', eliminar_usuario);
 // -- funciones utilizadas por el router  ----------------------- 
 // --------------------------------------------------------------
 
+
 async function login(req, res) {
     try {
         const { mail, contraseña } = req.body;
-        const [result] = await model.buscarPorMail(mail);
-        const iguales = bcrypt.compareSync(contraseña, result.contraseña);
+        const result = await model.buscarPorMail(mail);
+        const iguales = bcrypt.compare(contraseña, result.contraseña);
         if (iguales) {
             let user = {
                 nombre: result.nombre,
                 apellido: result.apellido,
-                mail: result.mail
+                mail: result.mail,
+                rol: result.rol
             }
             jwt.sign(user, 'secretPass', { expiresIn: '10000s' }, (err, token) => {
                 if (err) {
