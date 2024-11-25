@@ -3,14 +3,24 @@ const { validationResult, body, check } = require("express-validator");
 //separamos las reglas por un lado
 const rulesUser = () => [
     body('mail')
-        .notEmpty().withMessage('el mail no puede estar vacio')
-        .isEmail().withMessage('por favor ingrese un mail valido')
+        .notEmpty().withMessage('El mail no puede estar vacío')
+        .isEmail().withMessage('Por favor ingrese un mail válido')
         .normalizeEmail(),
-    body('pass')
-        .notEmpty().withMessage('la contraseña no puede estar vacia')
+    body('contraseña')
+        .notEmpty().withMessage('La contraseña no puede estar vacía')
         .isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres')
-        .isLength({ max: 16 }).withMessage('La contraseña debe tener menos 16 caracteres')
-]
+        .isLength({ max: 16 }).withMessage('La contraseña debe tener menos de 16 caracteres')
+        .matches(/\d/).withMessage('La contraseña debe contener al menos un número'),
+    body('nombre')
+        .notEmpty().withMessage('El nombre no puede estar vacío')
+        .isAlpha('es-ES', { ignore: ' ' }).withMessage('El nombre solo puede contener letras'),
+    body('apellido')
+        .notEmpty().withMessage('El apellido no puede estar vacío')
+        .isAlpha('es-ES', { ignore: ' ' }).withMessage('El apellido solo puede contener letras'),
+    body('rol')
+        .notEmpty().withMessage('El rol no puede estar vacío')
+        .isIn(['Tutor', 'Docente', 'Institucion']).withMessage('El rol debe ser Tutor, Docente o Institucion')
+];
 
 
 const alumnoRules = () => [

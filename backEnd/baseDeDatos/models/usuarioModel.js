@@ -5,17 +5,18 @@ const bcrypt = require('bcrypt');
 const Usuario = {
 
     //registrarse como usuario
-    crear_usuario: async (mail, contraseña, nombre, apellido) => {
+    crearUsuario: async (mail, contraseña, nombre, apellido, rol) => {
         const hashedPass = await bcrypt.hash(contraseña, 10); // Hasheamos la contraseña y reemplazamos pass por hashedPass
         //let textoHashed = bcrypt.hashSync("texto a encriptar",10);
         try {
-            const params = [mail, hashedPass, nombre, apellido];
-            const consulta = 'INSERT INTO usuario (mail, contraseña, nombre, apellido) VALUES (?, ?, ?, ?)';
+            const params = [mail, hashedPass, nombre, apellido, rol];
+            const consulta = 'INSERT INTO usuario (mail, contraseña, nombre, apellido, rol) VALUES (?, ?, ?, ?, ?)';
             const result = await db.execute(consulta, params);
             return { message: `Usuario ${mail} creado con exito como ${rol}`, detail: result };
         } catch (error) {
+             // Manejar errores específicos de la base de datos
             if (error.code === 'ER_DUP_ENTRY') {
-                throw new Error('Existe un usuario con los mismos datos: ' + error.message);
+                throw new Error('El correo ya está registrado' + error.message);
             } else if (error.code === 'ER_BAD_NULL_ERROR') {
                 throw new Error('La columna no puede ser nula: ' + error.message);
             } else if (error.code === 'ER_NO_REFERENCED_ROW') {
@@ -28,7 +29,7 @@ const Usuario = {
 
     //LISTAR USUARIOS
 
-    listar_usuarios: async () => {
+    listarUsuario: async () => {
         const query = 'SELECT * FROM usuario';
         try {
             const [rows] = await db.execute(query);
@@ -40,13 +41,13 @@ const Usuario = {
 
     //LISTAR POR ROL
 
-    listar_rol: async () => {
+    listarRol: async (rol) => {
         const query = 'SELECT * FROM usuario WHERE rol = ?';
         try {
-            const [rows] = await db.execute(query);
+            const [rows] = await db.execute(query, [rol]);
             
             if (rows.length === 0) {
-                throw new Error(`Usuarios no encontrados con rol: ${mail}`);
+                throw new Error(`Usuarios no encontrados con rol: ${rol}`);
             }
             return rows;
             
@@ -86,11 +87,11 @@ const Usuario = {
      
     //ACTUALIZAR USUARIO
 
-    actualizar_usuario: async (id, contraseña, mail, nombre, apellido) => {
+    actualizarUsuario: async (id_usuario, mail, contraseña, nombre, apellido, rol) => {
         const hashedPass = await bcrypt.hash(contraseña, 10);
-        const query = 'UPDATE usuario SET contraseña = ?, mail = ?, nombre = ?, apellido = ? WHERE id_usuario = ?';
+        const query = `UPDATE usuario SET mail = ?, contraseña = ?, nombre = ?, apellido = ?, rol = ? WHERE id_usuario = ?`;
         try {
-            await db.execute(query, [id, hashedPass, mail, nombre, apellido]);
+            await db.execute(query, [id_usuario, hashedPass, mail, nombre, apellido, rol]);
         } catch (error) {
             throw new Error('Error al actualizar el usuario: ' + error.message);
         }
@@ -98,10 +99,10 @@ const Usuario = {
 
     //BORRAR USUARIO
 
-    eliminar_usuario: async (id) => {
+    eliminarUsuario: async (id_usuario) => {
         const query = 'DELETE FROM usuario WHERE id_usuario = ?';
         try {
-            await db.execute(query, [id]);
+            await db.execute(query, [id_usuario]);
         } catch (error) {
             throw new Error('Error al eliminar el usuario: ' + error.message);
         }
@@ -109,12 +110,3 @@ const Usuario = {
 };
 
 module.exports = Usuario;
-
-
-/*
-const sql = 'SELECT * FROM persona WHERE dni = ?';
-db.execute(sql, [dni], (err, results) => {
-  if (err) throw err;
-  console.log(results);
-});
-*/
