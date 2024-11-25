@@ -2,11 +2,12 @@ import React from 'react'
 import GoOut from '../GoOut'
 import ListaAlumnosGeneral from './ListaAlumnosGeneral'
 import ListaDocentesGeneral from './ListaDocentesGeneral'
+import PerfilAdmin from './PerfilAdmin'
 
 export default function UserAdmin() {
   return (
     <div className="MenLeft">
-            <h3>Bienvenido</h3>
+            <h3>VISTA ADMINISTRADOR</h3>
             <div className="out">
                 <GoOut/>
             </div>
@@ -19,7 +20,7 @@ export default function UserAdmin() {
                             </div>
                             <div className="col-8 desc-perfil">
                                 <div className="tab-content content-perfil" id="nav-tabContent">
-                                    <div className="tab-perfil tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"></div>
+                                    <div className="tab-perfil tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"><PerfilAdmin/></div>
                                     <div className="tab-perfil tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list"><ListaAlumnosGeneral/></div>
                                     <div className="tab-perfil tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list"><ListaDocentesGeneral/></div>
                                 </div>

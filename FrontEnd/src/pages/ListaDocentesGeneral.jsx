@@ -111,7 +111,7 @@ export default function ListaDocentesGeneral() {
                 <button onClick={handleFilterByIdocente}>Buscar</button>
             </div>
 
-            <button onClick={handleAddDocente}>Agregar Docente</button>
+            <button className='agregar_docente' onClick={handleAddDocente}>Agregar Docente</button>
 
             {error && <div>{error}</div>}
             <table className="table table-striped table-hover table-bordered">
