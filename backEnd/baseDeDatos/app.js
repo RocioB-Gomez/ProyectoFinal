@@ -26,6 +26,9 @@ app.use("/api/usuario", usuarioController);  // Usar el router de usuarioControl
 const tutorController = require("./controllers/tutorController.js");
 app.use("/api/tutor", tutorController);  // Usar el router de tutorController
 
+// Importar controlador de docentes
+const docenteController = require("./controllers/docenteController.js");
+app.use("/api/docente", docenteController);  // Usar el router de docenteController
 
 // Página de inicio
 app.get("/", (req, res) => {

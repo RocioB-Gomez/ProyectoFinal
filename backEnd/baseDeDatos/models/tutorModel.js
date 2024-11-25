@@ -1,6 +1,6 @@
 //codigo encargado de gestionar los datos con la base de datos de los alumnos
 require('rootpath')();
-const db = require('../config/config_database');
+const db = require('config/config_database');
 //const router = require('../controllers/tutorController');
 
 
