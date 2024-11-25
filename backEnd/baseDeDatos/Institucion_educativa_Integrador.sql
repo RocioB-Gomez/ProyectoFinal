@@ -24,6 +24,7 @@ CREATE TABLE usuario (
     --router.get('/:usuario_id', buscarPorID);
     --router.put('/:usuario_id', actualizar_usuario);
     --router.delete('/:usuario_id', eliminar_usuario);
+
 );
 
 CREATE TABLE area_curricular (
@@ -40,9 +41,6 @@ CREATE TABLE docente (
     fk_institucion INT(11) NOT NULL, 
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario),
     FOREIGN KEY (fk_institucion) REFERENCES institucion(id_institucion)
-    --router.get('/') listarDocentes
-    --router.get('/:mail') obtenerDocentePorMail
-    --router.put('/modificarDocente/:id_docente') modificarDocente
 );
 
 CREATE TABLE asignatura (
@@ -61,7 +59,7 @@ CREATE TABLE tutor (
     fk_usuario INT(11) NOT NULL,
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
     --get("/", listarTodo);
-    --get('/:dni', obtenerPorMail);
+    --get('/:dni', obtenerPorDNI);
     --put("/:dni", modificarTutor);
     --delete("/:dni", eliminarTutor);
 );

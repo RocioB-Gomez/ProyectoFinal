@@ -3,6 +3,7 @@ const router = express.Router();
 const model = require('../models/usuarioModel.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { validationResult } = require('express-validator');
 const { rulesUser, validate } = require('../middleware/validations.js');
 
 // ----------------------------------------------------------
@@ -10,14 +11,13 @@ const { rulesUser, validate } = require('../middleware/validations.js');
 // ----------------------------------------------------------
 
 router.post('/login', login);
-router.post('/', rulesUser(), validate, crear_usuario);
-router.get('/', listar_usuarios);
-router.get('/rol', listar_rol);
-router.get('/:usuario_id', buscarPorID);
-router.put('/:usuario_id', actualizar_usuario);
-router.delete('/:usuario_id', eliminar_usuario);
+router.post('/', rulesUser(), validate, crearUsuario);
+router.get('/', listarUsuario);
+router.get('/rol/:rol', listarRol);
+router.put('/:id_usuario', actualizarUsuario);
+router.delete('/:id_usuario', eliminarUsuario);
 
-// -------------------------------------------------------------- 
+//  
 // -- funciones utilizadas por el router  ----------------------- 
 // --------------------------------------------------------------
 
@@ -49,62 +49,69 @@ async function login(req, res) {
     }
 }
 
-async function crear_usuario(req, res) {
-    const { mail, pass, persona_id } = req.body;
-    try {
-        const result = await model.crear_usuario(mail, pass, persona_id);
-        res.status(201).json(result);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+async function crearUsuario(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
-}
 
-async function listar_usuarios(req, res) {
-    try {
-        const results = await model.listar_usuarios();
-        res.status(200).json(results);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    const { mail, contraseña, nombre, apellido, rol } = req.body;
+    
+    // Validación básica
+    if (!mail || !contraseña || !nombre || !apellido || !rol) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
-}
 
-async function listar_rol(req, res) {
-    try {
-        const results = await model.listar_rol();
-        res.status(200).json(results);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    // Validación adicional para el campo "rol" (opcional)
+    const rolesPermitidos = ['Tutor', 'Docente', 'Institucion'];
+    
+    if (!rolesPermitidos.includes(rol)) {
+    return res.status(400).json({ error: 'El rol proporcionado no es válido' });
     }
-}
-
-async function buscarPorID(req, res) {
-    const { usuario_id } = req.params;
-    try {
-        const result = await model.buscarPorID(usuario_id);
-        if (result.length === 0) {
-            return res.status(404).json({ message: 'Usuario no encontrado' });
+        try {
+            const result = await model.crearUsuario(mail, contraseña, nombre, apellido, rol);
+            res.status(201).json(result);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
-        res.status(200).json(result[0]);
+}
+
+async function listarUsuario(req, res) {
+    try {
+        const results = await model.listarUsuario();
+        res.status(200).json(results);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
 
-async function actualizar_usuario(req, res) {
-    const { usuario_id } = req.params;
-    const { mail, pass, persona_id } = req.body;
+
+async function listarRol(req, res) {
+    const { rol } = req.params;
     try {
-        await model.actualizar_usuario(usuario_id, mail, pass, persona_id);
+        const usuarios = await model.listarRol(rol);
+        console.log('Rol recibido:', rol);
+        res.status(200).json(usuarios);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+async function actualizarUsuario(req, res) {
+    const { id_usuario } = req.params;
+    const { mail, contraseña, nombre, apellido, rol } = req.body;
+    try {
+        await model.actualizarUsuario (id_usuario, mail, contraseña, nombre, apellido, rol,);
         res.status(200).json({ message: 'Usuario actualizado correctamente' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 }
 
-async function eliminar_usuario(req, res) {
-    const { usuario_id } = req.params;
+async function eliminarUsuario(req, res) {
+    const { id_usuario } = req.params;
     try {
-        await model.eliminar_usuario(usuario_id);
+        await model.eliminarUsuario(id_usuario);
         res.status(200).json({ message: 'Usuario eliminado correctamente' });
     } catch (err) {
         res.status(500).json({ error: err.message });
