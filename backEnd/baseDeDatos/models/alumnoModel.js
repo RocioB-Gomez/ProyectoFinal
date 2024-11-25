@@ -2,39 +2,43 @@
 require('rootpath')();
 const db = require('../config/config_database');
 
+const ejecutarQuery = async (query, params) => {
+    try {
+        const [rows] = await db.execute(query, params);
+        return rows;
+    } catch (error) {
+        throw new Error('Error al ejecutar la consulta: ' + error.message);
+    }
+};
 
 const Alumno = {
 
     crearAlumno: async (dni, anio_ingreso, nombre, apellido, curso, fk_tutor) => {
-        const query = 'INSERT INTO alumno (dni, anio_ingreso, nombre, apellido, curso, fk_tutor) VALUES (?, ?, ?, ? ,? ,?)';
-        const insertado = 'SELECT * FROM alumno WHERE id_alumno = LAST_INSERT_ID()';
+        const query = 'INSERT INTO alumno (dni, anio_ingreso, nombre, apellido, curso, fk_tutor) VALUES (?, ?, ?, ?, ?, ?)';
         try {
-            await db.execute(query, [dni, anio_ingreso, nombre, apellido, curso, fk_tutor]);
-            const [rows] = await db.execute(insertado);
-            return rows[0];
+            const [result] = await db.execute(query, [dni, anio_ingreso, nombre, apellido, curso, fk_tutor]);
+            return { message: 'Alumno creado correctamente', alumnoId: result.insertId };  // Devolvemos el ID del nuevo alumno
         } catch (error) {
             throw new Error('Ha ocurrido un error al intentar ingresar los datos del alumno nuevo: ' + error.message);
         }
     },
    
-    listarTodo: async () => {
-        try {
-            const query = 'SELECT * FROM alumno';
-            const [rows] = await db.execute(query);
-            return rows;
-        } catch (error) {
-            throw new Error('Error al obtener la lista de alumnos: ' + error.message);
-        }
-    },
+   
+    listarTodo: async (page = 1, pageSize = 10) => {
+        const offset = (page - 1) * pageSize;
+        const query = 'SELECT * FROM alumno LIMIT ? OFFSET ?';
+        return await ejecutarQuery(query, [pageSize, offset]);
+   },
     
     obtenerPorCurso: async (curso) => {
         const query = 'SELECT * FROM alumno WHERE curso = ?';
-        try {
-            const [rows] = await db.execute(query, [curso]);
-            return rows;
-        } catch (error) {
-            throw new Error('Parece que no hay alumnos en ese curso: ' + error.message);
-        }
+        return await ejecutarQuery(query, [curso]);
+   },
+
+
+    obtenerPorDni: async (dni) => {
+    const query = 'SELECT * FROM alumno WHERE dni = ?';
+    return await ejecutarQuery(query, [dni]);
     },
     
     obtenerAlumno: async (dni) => {
@@ -49,35 +53,38 @@ const Alumno = {
     modificarAlumno: async (dni, anio_ingreso, nombre, apellido, curso) => {
         const query = 'UPDATE alumno SET anio_ingreso = ?, nombre = ?, apellido = ?, curso = ? WHERE dni = ?';
         try {
-            const result = await db.execute(query, [dni, anio_ingreso, nombre, apellido, curso]);
+            const result = await db.execute(query, [anio_ingreso, nombre, apellido, curso, dni]);
             if (result.affectedRows === 0) {
-                const error = new Error(`No se pudieron modificar los datos del alumno con el DNI: ${dni}`);
+                const error = new Error(`No se encontraron cambios para el alumno con el DNI: ${dni}`);
                 error.statusCode = 404;
                 throw error;
             }
-            return { message: "Alumno actualizado con exito", detail: result };
+            return { message: "Alumno actualizado con éxito", detail: result };
         } catch (error) {
-            throw new Error('Error al actualizar al alumno: ' + error.message);
+            if (!error.statusCode) error.statusCode = 500;  // Aseguramos que siempre haya un código de estado
+            throw error;
         }
     },
-
+   
     eliminarAlumno: async (dni) => {
         try {
             const query = 'DELETE FROM alumno WHERE dni = ?';
             const result = await db.execute(query, [dni]);
-
+   
             if (result.affectedRows === 0) {
-                const error = new Error(`No se encontro al alumno con el DNI: ${dni}`);
+                const error = new Error(`No se encontró el alumno con el DNI: ${dni}`);
                 error.statusCode = 404;
                 throw error;
             }
-
-            return { message: "Alumno eliminado con exito", detail: result }
-
+   
+            return { message: "Alumno eliminado con éxito", detail: result };
+   
         } catch (error) {
-            throw new Error('Error al eliminar al alumno: ' + error.message);
+            if (!error.statusCode) error.statusCode = 500;  // Aseguramos que siempre haya un código de estado
+            throw error;
         }
     }
+   
 };
 
 module.exports = Alumno;
