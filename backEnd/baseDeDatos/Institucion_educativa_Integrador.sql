@@ -17,6 +17,14 @@ CREATE TABLE usuario (
     nombre VARCHAR(50) NOT NULL,       
     apellido VARCHAR(50) NOT NULL,     
     rol ENUM('Tutor', 'Docente', 'Institucion') NOT NULL
+    --router.post('/login', login);
+    --router.post('/', rulesUser(), validate, crear_usuario);
+    --router.get('/', listar_usuarios);
+    --router.get('/rol', listar_rol);
+    --router.get('/:usuario_id', buscarPorID);
+    --router.put('/:usuario_id', actualizar_usuario);
+    --router.delete('/:usuario_id', eliminar_usuario);
+
 );
 
 CREATE TABLE area_curricular (
@@ -50,6 +58,10 @@ CREATE TABLE tutor (
     telefono VARCHAR(30) NOT NULL,
     fk_usuario INT(11) NOT NULL,
     FOREIGN KEY (fk_usuario) REFERENCES usuario(id_usuario)
+    --get("/", listarTodo);
+    --get('/:dni', obtenerPorDNI);
+    --put("/:dni", modificarTutor);
+    --delete("/:dni", eliminarTutor);
 );
 
 CREATE TABLE alumno (
@@ -61,6 +73,12 @@ CREATE TABLE alumno (
     curso VARCHAR(2) NOT NULL,     
     fk_tutor INT(11) NOT NULL,
     FOREIGN KEY (fk_tutor) REFERENCES tutor(id_tutor)
+    --post('/crear', alumnoRules(), validate, crearAlumno);
+    --get("/", listarTodo);
+    --get("/:curso", obtenerPorCurso);
+    --get('/:dni', obtenerAlumno);
+    --put("/:dni", modificarAlumno);
+    --delete("/:dni", eliminarAlumno);
 );
 
 CREATE TABLE calificacion (

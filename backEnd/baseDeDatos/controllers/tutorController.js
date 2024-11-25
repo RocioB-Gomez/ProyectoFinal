@@ -1,35 +1,23 @@
-// alumnoController.js
+// tutorController.js
 
 const express = require('express');
 const router = express.Router();
-const model = require('../models/alumnoModel.js').default;
+const model = require('../models/tutorModel.js');
 
-const { alumnoRules, validate } = require('../middleware/validations.js');
+
 // -------------------------------------------------------- 
-// --rutas de escucha (endpoint) disponibles para ALUMNO --- 
+// --rutas de escucha (endpoint) disponibles para TUTOR --- 
 // --------------------------------------------------------
 
-router.post('/', alumnoRules(), validate, crearAlumno);
 router.get("/", listarTodo);
-router.get("/:curso", obtenerPorCurso);
-router.get('/:dni', obtenerAlumno);
-router.put("/:dni", modificarAlumno);
-router.delete("/:dni", eliminarAlumno);
+router.get('/:mail', obtenerPorMail);
+router.put("/:mail", modificarTutor);
+router.delete("/:mail", eliminarTutor);
 
 
 // --------------------------------------------------------
 // --------- FUNCIONES UTILIZADAS EN ENDPOINTS -------------
 // --------------------------------------------------------
-
-async function crearAlumno(req, res) {
-    const { dni, anio_ingreso, nombre, apellido, curso } = req.body;
-    try {
-        await model.crearAlumno(dni, anio_ingreso, nombre, apellido, curso);
-        res.status(201).json({ message: 'Alumno creado correctamente' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
 
 async function listarTodo(req, res) {
     try {
@@ -40,12 +28,12 @@ async function listarTodo(req, res) {
     }
 }
 
-async function obtenerPorCurso(req, res) {
-    const { curso } = req.params;
+async function obtenerPorMail(req, res) {
+    const { mail } = req.params;
     try {
-        const results = await model.obtenerPorCurso(curso);
+        const results = await model.obtenerPorMail(mail);
         if (results.length === 0) {
-            return res.status(404).json({ message: 'No hay alumnos en este curso' });
+            return res.status(404).json({ message: 'No existe un Tutor con ese mail' });
         }
         res.status(200).json(results[0]);
     } catch (err) {
@@ -53,37 +41,26 @@ async function obtenerPorCurso(req, res) {
     }
 }
 
-async function obtenerAlumno(req, res) {
-    const { dni } = req.params;
-    try {
-        const results = await model.obtenerAlumno(dni);
-        if (results.length === 0) {
-            return res.status(404).json({ message: 'No hay ningun alumno con ese DNI' });
-        }
-        res.status(200).json(results[0]);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
 
-async function modificarAlumno(req, res) {
+
+async function modificarTutor(req, res) {
     const { dni } = req.params;
-    const { anio_ingreso, nombre, apellido, curso} = req.body;
+    const { direccion, telefono } = req.body;
     try {
-        await model.modificarAlumno(dni, anio_ingreso, nombre, apellido, curso);
-        res.status(200).json({ message: 'Alumno actualizado correctamente' });
+        await model.modificarTutor(direccion, telefono);
+        res.status(200).json({ message: 'Tutor actualizado correctamente' });
     } catch (error) {
         const statusCode = error.statusCode || 500;
         res.status(statusCode).send(error.message);
     }
 }
 
-async function eliminarAlumno(req, res) {
+async function eliminarTutor(req, res) {
     const { dni } = req.params;
     try {
-        const result = await model.eliminarAlumno(dni);
+        const result = await model.eliminarTutor(dni);
 
-        res.status(200).json({ message: 'Alumno eliminado correctamente' });
+        res.status(200).json({ message: 'Tutor eliminado correctamente' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

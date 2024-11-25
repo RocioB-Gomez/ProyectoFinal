@@ -1,36 +1,47 @@
 //codigo encargado de gestionar los datos con la base de datos de los alumnos
 require('rootpath')();
 const db = require('../config/config_database');
+//const router = require('../controllers/tutorController');
 
 
-const Alumno = {
+const Tutor = {
 
-    crearAlumno: async (dni, anio_ingreso, nombre, apellido, curso) => {
-        const query = 'INSERT INTO alumno (dni, anio_ingreso, nombre, apellido, curso) VALUES (?, ?, ?, ? ,?)';
-        try {
-            await db.execute(query, [dni, anio_ingreso, nombre, apellido, curso]);
-        } catch (error) {
-            throw new Error('Ha ocurrido un error al intentar ingresar los datos del alumno nuevo: ' + error.message);
-        }
-    },
-   
     listarTodo: async () => {
         try {
-            const query = 'SELECT * FROM alumno';
+            const query = 'SELECT * FROM tutor';
             const [rows] = await db.execute(query);
             return rows;
         } catch (error) {
-            throw new Error('Error al obtener la lista de alumnos: ' + error.message);
+            throw new Error('Error al obtener la lista de Tutores: ' + error.message);
         }
     },
     
-    obtenerPorCurso: async (curso) => {
-        const query = 'SELECT * FROM alumno WHERE curso = ?';
+    obtenerPorMail: async (mail) => {
         try {
-            const [rows] = await db.execute(query, [curso]);
+            const consulta = `
+                SELECT 
+                    u.mail, 
+                    u.nombre, 
+                    u.apellido, 
+                    t.direccion, 
+                    t.telefono
+                FROM USUARIOS u
+                INNER JOIN tutor t 
+                ON u.id_usuario = t.fk_usuario
+                WHERE u.mail = ?`;
+    
+            const [rows] = await db.execute(consulta, [mail]);
+            
+            console.log('Filas devueltas:', rows);
+    
+            if (rows.length === 0) {
+                throw new Error(`No se encontraron tutores con el mail: ${mail}`);
+            }
+    
             return rows;
         } catch (error) {
-            throw new Error('Parece que no hay alumnos en ese curso: ' + error.message);
+            console.error('Error ejecutando la consulta:', error.message);
+            throw new Error(`Error al buscar tutor por mail: ${error.message}`);
         }
     },
     
@@ -77,4 +88,4 @@ const Alumno = {
     }
 };
 
-module.exports = Alumno;
+module.exports = Tutor;
