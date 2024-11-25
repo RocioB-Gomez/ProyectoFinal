@@ -3,6 +3,7 @@
 }
 .view-perfil{
     display: grid;
+    min-height: 610px;
 }
 .cont-perfil{
     float: left;
@@ -121,3 +122,12 @@
     padding: 7px 15px;
     margin: 30px 0px;
 }
+
+/*vista admin*/
+.agregar_docente,
+.search-bar button{
+    color: white;
+    background-color: #783992 !important;
+    border-color: #783992 !important;
+    border-radius: 5px;
+    padding: 4px 11px;}
