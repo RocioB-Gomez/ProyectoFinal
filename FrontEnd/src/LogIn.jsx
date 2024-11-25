@@ -12,7 +12,7 @@ export default function Login() {
 
    function sesionIn() {
         setLogin(true);
-        navegar('/profesor/:id')
+        navegar('/administrador/:id')
    }
 
    function sesionOut() {

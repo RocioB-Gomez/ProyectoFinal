@@ -7,6 +7,8 @@ import ContactUs from './ContactUs.jsx'
 import UserPage from './pages/UserPage.jsx'
 import UserProfesor from './pages/UserProfesor.jsx'
 import { AlumnoEdit } from './pages/Actions.jsx'
+import ListaAlumnosGeneral from './pages/ListaAlumnosGeneral.jsx'
+import UserAdmin from './pages/UserAdmin.jsx'
 
 
 
@@ -21,8 +23,9 @@ function App() {
           <Route path='/acceder' element={<LogIn />} />
           <Route path='/acceder/tutor/:id_tutor' element={<UserPage />} />
           <Route path='/acceder/profesor/:id_profesor' element={<UserProfesor />} />
-          <Route path='/profesor/:id' element={<UserProfesor />} />
           <Route path='/acceder/alumno/edit/:id_alumno' element={<AlumnoEdit />} />
+
+          <Route path='/administrador/:id' element={<UserAdmin/>} /> {/*sólo para que funcione parcialmente el login*/}
 
 
           <Route path='/contactanos' element={< ContactUs />} />

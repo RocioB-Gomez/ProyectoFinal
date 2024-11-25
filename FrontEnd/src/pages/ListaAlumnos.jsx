@@ -1,7 +1,5 @@
 import Actions from "./Actions";
 
-import { useNavigate, useParams } from 'react-router-dom';
-
 export default function ListaAlumnos({ alumnos }) {
 
 

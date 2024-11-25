@@ -48,7 +48,7 @@ export default function UserPage() {
                         'authorization': sessionStorage.getItem('token')
                     }
                 }
-                const url = "http://localhost:8080/api/alumno/";
+                const url = "http://localhost:8080/alumnos";
 
                 setAlumnos(alumnos_list);
 
