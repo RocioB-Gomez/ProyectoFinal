@@ -21,11 +21,11 @@ function App() {
         <Routes>
           <Route path='/' element={<Landing />} />
           <Route path='/acceder' element={<LogIn />} />
-          <Route path='/acceder/tutor/:id_tutor' element={<UserPage />} />
-          <Route path='/acceder/profesor/:id_profesor' element={<UserProfesor />} />
+          <Route path='/tutor' element={<UserPage />} />
+          <Route path='/docente' element={<UserProfesor />} />
           <Route path='/acceder/alumno/edit/:id_alumno' element={<AlumnoEdit />} />
 
-          <Route path='/administrador/:id' element={<UserAdmin/>} /> {/*sólo para que funcione parcialmente el login*/}
+          <Route path='/administrador' element={<UserAdmin/>} /> {/*sólo para que funcione parcialmente el login*/}
 
 
           <Route path='/contactanos' element={< ContactUs />} />
